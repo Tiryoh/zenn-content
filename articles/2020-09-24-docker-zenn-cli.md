@@ -3,7 +3,7 @@ title: "Zenn CLIのDockerfileとその使い方の紹介"
 emoji: "🐳"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["zenncli", "docker"]
-published: false
+published: publish
 ---
 
 Zenn CLIはNode.js製のZennのローカル編集をサポートするためのツールです[^1][^3][^4]。
