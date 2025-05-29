@@ -43,7 +43,7 @@ https://github.com/ros2/ros2_documentation/pull/3703
 
 このパスの修正により`colcon build --merge-install`などでmerge installする場合にunderlay/overlayに同名のパッケージがあると衝突してしまう問題を解決できるようになったようです。
 
-https://github.com/ros2/ros2/issues/1150
+https://hans-robo.hatenablog.com/entry/2022/12/01/235528
 
 Humbleリリース時にこの話を聞いたことがあったような気がしますが、そもそもmerge installをしていなかったり、単一ワークスペースのみで使っている場合はあまり影響がなかったので、完全に忘れていました。
 
@@ -92,3 +92,5 @@ ament_auto_package(
 https://github.com/ros2/ros2/issues/1150
 
 https://github.com/ament/ament_cmake/pull/574
+
+https://hans-robo.hatenablog.com/entry/2022/12/01/235528
