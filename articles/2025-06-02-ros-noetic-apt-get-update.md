@@ -114,11 +114,15 @@ RUN \
 
 ```dockerfile
 # Update gpg key
+# ROS 2 Documentationに記載されている方法では /etc/apt/sources.list.d/ros2.list
+# ros:jazzy-ros-base などのDockerイメージでは /etc/apt/sources.list.d/ros2-latest.list
 RUN \
   rm -rf /etc/apt/sources.list.d/ros2-latest.list && \
+  rm -rf /etc/apt/sources.list.d/ros2.list && \
   apt-get update -q && \
   apt-get install -yq --no-install-recommends curl && \
   curl -sS https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg && \
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $( . /etc/os-release && echo $UBUNTU_CODENAME ) main" > /etc/apt/sources.list.d/ros2.list && \
   rm -rf /var/lib/apt/lists/*
 ```
 
