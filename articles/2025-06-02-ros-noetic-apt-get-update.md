@@ -141,3 +141,18 @@ https://github.com/Tiryoh/ros_gpg_key_update
 ## 参考
 
 https://github.com/ros-infrastructure/ros-apt-source/pull/12
+
+https://discourse.ros.org/t/ros-signing-key-migration-guide/43937
+
+## 更新履歴
+
+### 2025年6月2日（1）
+
+- DockerfileとShellScriptのコードを追加
+- ROS 1/2両方影響するのでNoetic限定についての記述を削除
+
+### 2025年6月2日（2）
+
+- Xで教えていただいたROS Discourseの記事を追記
+
+https://x.com/ReMIX28395705/status/1929487380991332451
