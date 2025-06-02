@@ -62,6 +62,7 @@ deb [arch=amd64 signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://pa
 sudo curl -sS https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 ```
 
+
 ## 確認
 
 新しい公開鍵は2030年6月まで使えることが確認でき、`apt update`が成功することが確認できます。
@@ -73,7 +74,41 @@ pub   rsa4096 2019-05-30 [SC] [expires: 2030-06-01]
 uid                      Open Robotics <info@osrfoundation.org>
 ```
 
-また、ROS NoeticがEOLになったことから、ROS Noetic環境で`rosdep update`するときには今後は
+## その他
+
+あとからコピペできるように実際の使用例をメモしておきます。
+
+### Dockerfile
+
+新規でROSをインストールする場合はビルドしなおせばOKです。  
+既存のDockerイメージをベースにそのままDockerfileに追記する場合は、以下のようにします。
+
+```dockerfile
+# Update gpg key
+RUN \
+  rm -rf /etc/apt/sources.list.d/ros1-latest.list && \
+  apt-get update -q && \
+  apt-get install -yq --no-install-recommends curl && \
+  curl -sS https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg && \
+  apt-key del C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 && \
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros/ubuntu $( . /etc/os-release && echo $UBUNTU_CODENAME ) main" > /etc/apt/sources.list.d/ros1-latest.list && \
+  rm -rf /var/lib/apt/lists/*
+```
+
+### ShellScript
+
+`apt-key add`で公開鍵を追加した場合も、Signed-Byでリポジトリと公開鍵を紐付けていた場合も、以下のコマンドでシェルスクリプトを使って公開鍵を差し替えることができます。
+
+```sh
+curl -SsL git.io/ros-gpg-key-update | sh
+```
+
+呼び出しているシェルスクリプトは以下です。CC-0ライセンスで公開しているので、ご自由にご利用ください。  
+2019年に[ROSのbuild farmでのGPG Key差し替えになったとき](https://discourse.ros.org/t/new-gpg-keys-deployed-for-packages-ros-org/9454)に公開したものですが、まさかまた使うことになるとは思いませんでした。
+
+https://github.com/Tiryoh/ros_gpg_key_update
+
+余談ですが、ROS NoeticがEOLになったことから、ROS Noetic環境で`rosdep update`するときには今後は
 `rosdep update --rosdistro=noetic`とするか、`rosdep update --include-eol-distros`とする必要があります。
 
 ## 参考
