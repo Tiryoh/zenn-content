@@ -18,9 +18,9 @@ E: The repository 'http://packages.ros.org/ros/ubuntu focal InRelease' is not si
 ```
 
 :::message
-当初ROS Noeticに限定して書いていましたが、ポイントは、**2025年5月28日以降にROSをインストールしたかどうか**です。
-ROS Noeticに関しては多くの場合、2025年5月28日以前にインストールしていると思いますので、影響を受けます。
-ROS 2に関しても2025年5月28日以前にインストールしていると同じエラーが出る可能性があります。
+当初ROS Noeticに限定して書いていましたが、ポイントは、**2025年5月28日以前にROSをインストールしたかどうか**です。
+ROS 1なのかROS 2なのかに関わらず、2025年5月28日以前にインストールしている場合、2025年6月1日以降に影響を受けます。
+https://discourse.ros.org/t/ros-signing-key-migration-guide/43937
 :::
 
 ## 原因と対処方法
