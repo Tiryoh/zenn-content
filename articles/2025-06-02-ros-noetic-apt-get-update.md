@@ -17,6 +17,11 @@ W: GPG error: http://packages.ros.org/ros/ubuntu focal InRelease: The following 
 E: The repository 'http://packages.ros.org/ros/ubuntu focal InRelease' is not signed.
 ```
 
+:::message
+ポイントは、**2025年5月28日以降にROS Noeticをインストールしたかどうか**です。
+ほとんどの場合、2025年5月28日以前にROS Noeticをインストールしていると思いますので、影響を受けます。
+:::
+
 ## 原因と対処方法
 
 原因は今まで使用されていた公開鍵が2025年5月末で期限切れになっていることです。
@@ -28,7 +33,9 @@ pub   rsa4096 2019-05-30 [SC] [expired: 2025-06-01]
 uid                      Open Robotics <info@osrfoundation.org>
 ```
 
-5月28日にros/rosdistroリポジトリに新しい公開鍵が追加されているので、これに差し替えます。
+5月28日にros/rosdistroリポジトリに新しい公開鍵が追加されています。
+5月28日以降にROS Noeticをインストールした場合は、この新しい公開鍵をダウンロードしているはずなのでこれ以降に紹介する手順は一切不要なはずですが、
+それ以外の場合は、この新しい公開鍵への差し替えが必要になります。
 
 https://github.com/ros/rosdistro/pull/46048
 
