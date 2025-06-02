@@ -1,5 +1,5 @@
 ---
-title: "2025年6月以降ROS Noetic環境でapt-get updateするときにGPG errorが発生する場合の対処方法"
+title: "2025年6月以降ROS環境でapt-get updateするときにGPG errorが発生する場合の対処方法"
 emoji: "📌"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["ros"]
@@ -10,7 +10,7 @@ published: true
 
 https://www.ros.org/blog/noetic-eol/
 
-2025年6月1日以降、ROS Noetic環境で`apt-get update`するときにGPG errorが発生する場合があります。
+2025年6月1日以降、ROSインストール済みの環境で`apt-get update`するときにGPG errorが発生する場合があります。
 
 ```
 W: GPG error: http://packages.ros.org/ros/ubuntu focal InRelease: The following signatures were invalid: EXPKEYSIG F42ED6FBAB17C654 Open Robotics <info@osrfoundation.org>
@@ -18,8 +18,9 @@ E: The repository 'http://packages.ros.org/ros/ubuntu focal InRelease' is not si
 ```
 
 :::message
-ポイントは、**2025年5月28日以降にROS Noeticをインストールしたかどうか**です。
-ほとんどの場合、2025年5月28日以前にROS Noeticをインストールしていると思いますので、影響を受けます。
+当初ROS Noeticに限定して書いていましたが、ポイントは、**2025年5月28日以降にROSをインストールしたかどうか**です。
+ROS Noeticに関しては多くの場合、2025年5月28日以前にインストールしていると思いますので、影響を受けます。
+ROS 2に関しても2025年5月28日以前にインストールしていると同じエラーが出る可能性があります。
 :::
 
 ## 原因と対処方法
@@ -34,7 +35,7 @@ uid                      Open Robotics <info@osrfoundation.org>
 ```
 
 5月28日にros/rosdistroリポジトリに新しい公開鍵が追加されています。
-5月28日以降にROS Noeticをインストールした場合は、この新しい公開鍵をダウンロードしているはずなのでこれ以降に紹介する手順は一切不要なはずですが、
+5月28日以降にROS/ROS 2をインストールした場合は、この新しい公開鍵をダウンロードしているはずなのでこれ以降に紹介する手順は一切不要なはずです。
 それ以外の場合は、この新しい公開鍵への差し替えが必要になります。
 
 https://github.com/ros/rosdistro/pull/46048
@@ -63,6 +64,10 @@ Signed-By で下記のようにリポジトリと公開鍵を紐付けていた�
 deb [arch=amd64 signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros/ubuntu focal main
 ```
 
+```txt:/etc/apt/sources.list.d/ros2.list
+deb [arch=amd64 signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu jammy main
+```
+
 以下のコマンドで公開鍵を差し替えます。
 
 ```sh
@@ -72,7 +77,7 @@ sudo curl -sS https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o 
 
 ## 確認
 
-新しい公開鍵は2030年6月まで使えることが確認でき、`apt update`が成功することが確認できます。
+新しい公開鍵は2030年6月まで使えることと、`apt update`が成功することが確認できます。
 
 ```sh-session
 $ gpg --show-keys /usr/share/keyrings/ros-archive-keyring.gpg
@@ -90,6 +95,9 @@ uid                      Open Robotics <info@osrfoundation.org>
 新規でROSをインストールする場合はビルドしなおせばOKです。  
 既存のDockerイメージをベースにそのままDockerfileに追記する場合は、以下のようにします。
 
+
+**ROS 1**
+
 ```dockerfile
 # Update gpg key
 RUN \
@@ -102,20 +110,32 @@ RUN \
   rm -rf /var/lib/apt/lists/*
 ```
 
+**ROS 2**
+
+```dockerfile
+# Update gpg key
+RUN \
+  rm -rf /etc/apt/sources.list.d/ros2-latest.list && \
+  apt-get update -q && \
+  apt-get install -yq --no-install-recommends curl && \
+  curl -sS https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg && \
+  rm -rf /var/lib/apt/lists/*
+```
+
 ### ShellScript
 
-`apt-key add`で公開鍵を追加した場合も、Signed-Byでリポジトリと公開鍵を紐付けていた場合も、以下のコマンドでシェルスクリプトを使って公開鍵を差し替えることができます。
+`apt-key add`で公開鍵を追加した場合も、Signed-Byでリポジトリと公開鍵を紐付けていた場合も、以下のコマンドでシェルスクリプトを使って公開鍵を差し替えることができます。ROS 1/2両方対応しています。
 
 ```sh
 curl -SsL git.io/ros-gpg-key-update | sh
 ```
 
-呼び出しているシェルスクリプトは以下です。CC-0ライセンスで公開しているので、ご自由にご利用ください。  
+呼び出しているシェルスクリプトは以下です。[CC-0ライセンス](https://creativecommons.org/publicdomain/zero/1.0/)で公開しているので、ご自由にご利用ください。  
 2019年に[ROSのbuild farmでのGPG Key差し替えになったとき](https://discourse.ros.org/t/new-gpg-keys-deployed-for-packages-ros-org/9454)に公開したものですが、まさかまた使うことになるとは思いませんでした。
 
 https://github.com/Tiryoh/ros_gpg_key_update
 
-余談ですが、ROS NoeticがEOLになったことから、ROS Noetic環境で`rosdep update`するときには今後は
+これもまた余談ですが、ROS NoeticがEOLになったことから、ROS Noetic環境で`rosdep update`するときには今後は
 `rosdep update --rosdistro=noetic`とするか、`rosdep update --include-eol-distros`とする必要があります。
 
 ## 参考
