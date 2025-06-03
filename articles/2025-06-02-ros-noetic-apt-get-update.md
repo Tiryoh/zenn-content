@@ -131,7 +131,13 @@ RUN \
 `apt-key add`で公開鍵を追加した場合も、Signed-Byでリポジトリと公開鍵を紐付けていた場合も、以下のコマンドでシェルスクリプトを使って公開鍵を差し替えることができます。ROS 1/2両方対応しています。
 
 ```sh
-curl -SsL git.io/ros-gpg-key-update | sh
+curl -sS https://raw.githubusercontent.com/Tiryoh/ros_gpg_key_update/refs/heads/master/run.sh -o ros-gpg-key-update.sh
+sh ros-gpg-key-update.sh
+```
+
+```sh
+# 一応こちらでも実行可能です
+curl -sSL git.io/ros-gpg-key-update | sh
 ```
 
 呼び出しているシェルスクリプトは以下です。[CC-0ライセンス](https://creativecommons.org/publicdomain/zero/1.0/)で公開しているので、ご自由にご利用ください。  
