@@ -2,7 +2,7 @@
 title: "miseを使っている環境でClaude CodeのVSCode拡張機能をインストールする"
 emoji: "🔌"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["mise", "cursor", "claude", "vscode"]
+topics: ["mise", "cursor", "claudecode", "vscode"]
 published: true
 ---
 2025年5月22日のCode with Claudeで発表され、正式リリースされた[Claude Code](https://www.npmjs.com/package/@anthropic-ai/claude-code)では、VSCodeの拡張機能が提供されるようになりました。
