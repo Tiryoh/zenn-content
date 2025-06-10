@@ -115,10 +115,14 @@ RUN \
 ```dockerfile
 # Update gpg key
 # ROS 2 Documentationに記載されている方法では /etc/apt/sources.list.d/ros2.list
-# ros:jazzy-ros-base などのDockerイメージでは /etc/apt/sources.list.d/ros2-latest.list
+# 古い ros:jazzy-ros-base などのDockerイメージでは /etc/apt/sources.list.d/ros2-latest.list
+# 新しい ros:jazzy-ros-base などのDockerイメージでは /etc/apt/sources.list.d/ros2.sources
+# 新しい Dockerイメージでは更新された公開鍵がとりこまれているので、本来は更新不要
+# https://github.com/ros-infrastructure/ros-apt-source/pull/8
 RUN \
   rm -rf /etc/apt/sources.list.d/ros2-latest.list && \
   rm -rf /etc/apt/sources.list.d/ros2.list && \
+  rm -rf /etc/apt/sources.list.d/ros2.sources && \
   apt-get update -q && \
   apt-get install -yq --no-install-recommends curl && \
   curl -sS https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg && \
@@ -166,3 +170,7 @@ https://discourse.ros.org/t/ros-signing-key-migration-guide/43937
 - Xで教えていただいたROS Discourseの記事を追記
 
 https://x.com/ReMIX28395705/status/1929487380991332451
+
+### 2025年6月10日
+
+- 新しいDockerイメージでは`/etc/apt/sources.list.d/ros2.sources`になっているので、その旨を追記
