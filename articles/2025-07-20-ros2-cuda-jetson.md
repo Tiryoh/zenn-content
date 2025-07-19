@@ -3,7 +3,7 @@ title: "JetsonでROS1/ROS2を使う際のCUDA互換性問題と解決策"
 emoji: "🤖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["ROS1", "ROS2", "ROS", "CUDA", "Jetson"]
-published: false
+published: true
 ---
 
 :::message
